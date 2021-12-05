@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:paddingStart="20dp"
+    android:paddingTop="5dp"
+    android:paddingEnd="20dp">
+
+    <ImageView
+        android:id="@+id/image_view_food_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginVertical="10dp"
+        android:layout_marginEnd="25dp"
+        android:padding="8dp"
+        android:src="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_food_title"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/purple_700"
+        android:layout_alignStart="@id/image_view_food_icon"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="70dp"
+        android:padding="5dp"
+        android:text="Dal Makhni"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_food_description"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@id/image_view_food_icon"
+        android:layout_alignTop="@id/tv_food_title"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="30dp"
+        android:text="Dal Makhni Description ewnwnefnfwwefnjewnfj"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/tv_food_price"
+        android:layout_width="100dp"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:padding="2dp"
+        android:text="Rs 200"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/tv_food_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/floating_action_button_minus"
+        android:layout_alignBottom="@id/tv_food_description"
+        android:layout_marginEnd="-12dp"
+        android:layout_marginBottom="-1dp"
+        android:text="70"
+        android:textSize="18sp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/tv_food_price"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/white"
+        android:clickable="true"
+        app:fabCustomSize="20dp"
+        app:maxImageSize="22dp"
+        app:srcCompat="@drawable/ic_plus_icon" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button_minus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/tv_food_price"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/white"
+        android:clickable="true"
+        app:fabCustomSize="20dp"
+        app:maxImageSize="18dp"
+        app:srcCompat="@drawable/ic_minus_icon" />
+
+</RelativeLayout>
