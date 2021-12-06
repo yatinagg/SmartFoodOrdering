@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,12 +50,12 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder((LayoutInflater.from(parent.getContext())).inflate(R.layout.listview_food,parent,false));
+        return new ViewHolder((LayoutInflater.from(parent.getContext())).inflate(R.layout.listview_food, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
-        Log.d("output1","points : "+foodList);
+        Log.d("output1", "points : " + foodList);
 
         Food food = foodList.get(position);
 
@@ -66,25 +65,19 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
         viewHolder.quantity.setText(String.valueOf(food.getQuantity()));
         viewHolder.icon.setImageResource(food.getIcon());
 
-        viewHolder.buttonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                food.incrementQuantity();
-                Log.d("output1","clicked");
-                viewHolder.quantity.setText(String.valueOf(food.getQuantity()));
-            }
+        viewHolder.buttonAdd.setOnClickListener(v -> {
+            food.incrementQuantity();
+            Log.d("output1", "clicked");
+            viewHolder.quantity.setText(String.valueOf(food.getQuantity()));
         });
-        viewHolder.buttonDec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                food.decrementQuantity();
-                if(food.getQuantity() < 0){
-                    Toast.makeText(v.getContext(), "Invalid option",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Log.d("output1","clicked");
-                viewHolder.quantity.setText(String.valueOf(food.getQuantity()));
+        viewHolder.buttonDec.setOnClickListener(v -> {
+            food.decrementQuantity();
+            if (food.getQuantity() < 0) {
+                Toast.makeText(v.getContext(), "Invalid option", Toast.LENGTH_SHORT).show();
+                return;
             }
+            Log.d("output1", "clicked");
+            viewHolder.quantity.setText(String.valueOf(food.getQuantity()));
         });
     }
 

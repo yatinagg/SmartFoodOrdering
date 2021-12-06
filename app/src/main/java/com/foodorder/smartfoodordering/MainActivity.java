@@ -25,20 +25,20 @@ public class MainActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(v -> {
             phone = etPhone.getText().toString();
             password = etPassword.getText().toString();
-            if(password.length() == 0 && phone.length() == 0){
-                Toast.makeText(this,"Please enter details",Toast.LENGTH_SHORT).show();
+            if (password.length() == 0 && phone.length() == 0) {
+                Toast.makeText(this, "Please enter details", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(password.length() == 0){
-                Toast.makeText(this,"Please enter password",Toast.LENGTH_SHORT).show();
+            if (password.length() == 0) {
+                Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(phone.length() == 0){
-                Toast.makeText(this,"Please enter phone number",Toast.LENGTH_SHORT).show();
+            if (phone.length() == 0) {
+                Toast.makeText(this, "Please enter phone number", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(phone.length() != 10){
-                Toast.makeText(this,"Invalid Phone Number",Toast.LENGTH_SHORT).show();
+            if (phone.length() != 10) {
+                Toast.makeText(this, "Invalid Phone Number", Toast.LENGTH_SHORT).show();
                 return;
             }
             Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
