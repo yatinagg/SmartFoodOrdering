@@ -62,7 +62,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
 
         viewHolder.title.setText(food.getTitle());
         viewHolder.description.setText(food.getDescription());
-        viewHolder.price.setText(String.valueOf(food.getPrice()));
+        viewHolder.price.setText("Rs " + food.getPrice());
         viewHolder.quantity.setText(String.valueOf(food.getQuantity()));
         viewHolder.icon.setImageResource(food.getIcon());
 

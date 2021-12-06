@@ -47,6 +47,14 @@ public class HomeActivity extends AppCompatActivity {
         List<Food> foodList = new ArrayList<>();
         foodList.add(new Food("Dal Makhni",R.drawable.dal_makhni,"Dal Makhni Description",180,0));
         foodList.add(new Food("Paneer",R.drawable.paneer,"Paneer Description",210,0));
+        foodList.add(new Food("Chole Bhature",R.drawable.chole_bhature,"2 pcs Bhature with Chole",80,0));
+        foodList.add(new Food("Idli",R.drawable.idli_sambhar,"2 pcs Idli with Sambhar",70,0));
+        foodList.add(new Food("Malai Kofta",R.drawable.malai_kofta,"Malai Kofta description",190,0));
+        foodList.add(new Food("Masala Dosa",R.drawable.masala_dosa,"Masala dosa with sambhar and chutney",100,0));
+        foodList.add(new Food("Mix Veg",R.drawable.mix_veg,"Mix Veg Description",160,0));
+        foodList.add(new Food("Pav Bhaji",R.drawable.pav_bhaji,"2 pcs Pav with bhaji",150,0));
+        foodList.add(new Food("Sambhar Vada",R.drawable.sambhar_vada,"2 pcs vada with sambhar and chutney",80,0));
+
 
         FoodListAdapter = new FoodListAdapter(foodList);
         recyclerView.setAdapter(FoodListAdapter);
