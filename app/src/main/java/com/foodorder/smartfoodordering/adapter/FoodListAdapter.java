@@ -73,6 +73,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
         viewHolder.buttonDec.setOnClickListener(v -> {
             food.decrementQuantity();
             if (food.getQuantity() < 0) {
+                food.setQuantity(0);
                 Toast.makeText(v.getContext(), "Invalid option", Toast.LENGTH_SHORT).show();
                 return;
             }
