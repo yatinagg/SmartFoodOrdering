@@ -33,11 +33,94 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_food"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="50dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_menu_items"
         app:layout_constraintBottom_toTopOf="@+id/button_submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:listitem="@layout/listview_food" />
+
+    <TextView
+        android:id="@+id/order_placed_title"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Item Name"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:visibility="invisible"
+        android:layout_marginHorizontal="24dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_menu_items"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <TextView
+        android:id="@+id/order_placed_item_title"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textColor="#3A3B3C"
+        android:layout_marginHorizontal="24dp"
+        app:layout_constraintTop_toBottomOf="@id/order_placed_title"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Your order is placed"
+        android:textSize="20sp"
+        android:visibility="invisible"/>
+
+
+
+    <TextView
+        android:id="@+id/order_placed_quantity"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="Qty"
+        android:layout_marginHorizontal="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/tv_menu_items"
+        app:layout_constraintStart_toEndOf="@id/order_placed_title"/>
+    <TextView
+        android:id="@+id/order_placed_item_quantity"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textColor="#3A3B3C"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintTop_toBottomOf="@id/order_placed_quantity"
+        app:layout_constraintStart_toEndOf="@id/order_placed_item_title"
+        android:text="Your order is placed"
+        android:textSize="20sp"
+        android:visibility="invisible"/>
+
+
+    <TextView
+        android:id="@+id/order_placed_price"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="Price"
+        android:layout_marginHorizontal="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/tv_menu_items"
+        app:layout_constraintStart_toEndOf="@id/order_placed_quantity"/>
+    <TextView
+        android:id="@+id/order_placed_item_price"
+        android:layout_width="50dp"
+        android:textColor="#3A3B3C"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintTop_toBottomOf="@id/order_placed_price"
+        app:layout_constraintStart_toEndOf="@id/order_placed_item_quantity"
+        android:text="Your order is placed"
+        android:textSize="20sp"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tv_total_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/button_submit"
+        android:text="Total Price : Rs100"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:visibility="invisible"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

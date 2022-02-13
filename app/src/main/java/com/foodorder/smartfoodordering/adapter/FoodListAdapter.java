@@ -19,7 +19,6 @@ import java.util.List;
 
 public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHolder> {
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView title;
@@ -42,6 +41,10 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
     }
 
     private final List<Food> foodList;
+
+    public List<Food> getFoodList() {
+        return this.foodList;
+    }
 
     public FoodListAdapter(List<Food> list) {
         this.foodList = list;

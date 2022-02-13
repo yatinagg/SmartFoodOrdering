@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SmartFoodOrdering</string>
+    <string name="google_log_in">Google Log in</string>
 </resources>
