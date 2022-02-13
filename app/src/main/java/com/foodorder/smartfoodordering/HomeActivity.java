@@ -8,16 +8,23 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.foodorder.smartfoodordering.adapter.FoodListAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -27,6 +34,7 @@ public class HomeActivity extends AppCompatActivity {
     private FoodListAdapter foodListAdapter;
     private Button orderButton;
     private Order order;
+    private String TAG = "HomeActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +117,43 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 orderPlacedItemPrice.setText(price);
 
+
+                addOrderToFireStore(order);
             }
         });
+    }
+
+    private void addOrderToFireStore(Order order) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+        // Create a new user with a first and last name
+        Map<String, Object> mOrder = new HashMap<>();
+        List<Map<String,Object>> foodItems = new ArrayList<>();
+        for(int i=0;i<order.getFoodList().size();i++){
+            Map<String,Object> food = new HashMap<>();
+            food.put("Name",order.getFoodList().get(i).title);
+            food.put("Quantity",order.getFoodList().get(i).quantity);
+            food.put("Price",order.getFoodList().get(i).price);
+            foodItems.add(food);
+        }
+        mOrder.put("foodItems", foodItems);
+        mOrder.put("totalPrice", order.getTotalPrice());
+
+// Add a new document with a generated ID
+        db.collection("orders")
+                .add(mOrder)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
     }
 }
