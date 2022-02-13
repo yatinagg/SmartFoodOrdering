@@ -28,8 +28,7 @@ import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private String phone;
-    private String password;
+    private String email;
     private RecyclerView recyclerView;
     private FoodListAdapter foodListAdapter;
     private Button orderButton;
@@ -43,9 +42,7 @@ public class HomeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        phone = intent.getStringExtra("phone");
-        password = intent.getStringExtra("password");
-        System.out.println("Login credentials " + phone + " " + password);
+        email = intent.getStringExtra("email");
 
         Button buttonSubmit = findViewById(R.id.button_submit);
         buttonSubmit.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Order Placed", Toast.LENGTH_SHORT).show());
@@ -137,6 +134,7 @@ public class HomeActivity extends AppCompatActivity {
             food.put("Price",order.getFoodList().get(i).price);
             foodItems.add(food);
         }
+        mOrder.put("email",email);
         mOrder.put("foodItems", foodItems);
         mOrder.put("totalPrice", order.getTotalPrice());
 
