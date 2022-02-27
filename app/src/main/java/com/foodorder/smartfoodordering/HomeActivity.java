@@ -18,6 +18,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.shreyaspatil.EasyUpiPayment.EasyUpiPayment;
+import com.shreyaspatil.EasyUpiPayment.listener.PaymentStatusListener;
+import com.shreyaspatil.EasyUpiPayment.model.PaymentApp;
+import com.shreyaspatil.EasyUpiPayment.model.TransactionDetails;
 
 import org.w3c.dom.Text;
 
@@ -26,13 +30,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements PaymentStatusListener {
 
     private String email;
     private RecyclerView recyclerView;
     private FoodListAdapter foodListAdapter;
     private Button orderButton;
     private Order order;
+    private Button payButton;
     private String TAG = "HomeActivity";
 
     @Override
@@ -50,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view_food);
 
         List<Food> foodList = new ArrayList<>();
-        foodList.add(new Food("Dal Makhni", R.drawable.dal_makhni, "Dal Makhni Description", 180, 0));
+        foodList.add(new Food("Dal Makhni", R.drawable.dal_makhni, "Dal Makhni Description", 10, 0));
         foodList.add(new Food("Paneer", R.drawable.paneer, "Paneer Description", 210, 0));
         foodList.add(new Food("Chole Bhature", R.drawable.chole_bhature, "2 pcs Bhature with Chole", 80, 0));
         foodList.add(new Food("Idli", R.drawable.idli_sambhar, "2 pcs Idli with Sambhar", 70, 0));
@@ -66,9 +71,19 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
 
         orderButton = findViewById(R.id.button_submit);
+        payButton = findViewById(R.id.button_pay);
+        payButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Srishti is pagal",order.getTotalPrice() + "checl");
+                makePayment(String.valueOf(order.getTotalPrice())+".00", "kriti03@axl","SmartFoodOrdering", order.getTotalPrice() +" "+email,email);
+            }
+        });
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                orderButton.setVisibility(View.INVISIBLE);
+                payButton.setVisibility(View.VISIBLE);
                 orderButton.setText("Order Placed");
                 TextView menuItems = findViewById(R.id.tv_menu_items);
                 menuItems.setText("Order Placed");
@@ -118,6 +133,69 @@ public class HomeActivity extends AppCompatActivity {
                 addOrderToFireStore(order);
             }
         });
+    }
+
+    private void makePayment(String amount, String upi, String name, String desc, String transactionId) {
+        // on below line we are calling an easy payment method and passing
+        // all parameters to it such as upi id,name, description and others.
+        final EasyUpiPayment easyUpiPayment = new EasyUpiPayment.Builder()
+                .with(this)
+                // on below line we are adding upi id.
+                .setPayeeVpa(upi)
+                // on below line we are setting name to which we are making payment.
+                .setPayeeName(name)
+                // on below line we are passing transaction id.
+                .setTransactionId(transactionId)
+                // on below line we are passing transaction ref id.
+                .setTransactionRefId(transactionId)
+                // on below line we are adding description to payment.
+                .setDescription(desc)
+                // on below line we are passing amount which is being paid.
+                .setAmount(amount)
+                // on below line we are calling a build method to build this ui.
+                .build();
+        // on below line we are calling a start
+        // payment method to start a payment.
+        easyUpiPayment.startPayment();
+        // on below line we are calling a set payment
+        // status listener method to call other payment methods.
+        easyUpiPayment.setPaymentStatusListener(this);
+    }
+
+    @Override
+    public void onTransactionCompleted(TransactionDetails transactionDetails) {
+        // on below line we are getting details about transaction when completed.
+        Log.d("HomeActivity","onTransactionCompleted");
+    }
+
+    @Override
+    public void onTransactionSuccess() {
+        // this method is called when transaction is successful and we are displaying a toast message.
+        Toast.makeText(this, "Transaction successfully completed..", Toast.LENGTH_SHORT).show();
+        payButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onTransactionSubmitted() {
+        Log.d("HomeActivity","onTransactionSubmitted");
+    }
+
+    @Override
+    public void onTransactionFailed() {
+        Toast.makeText(this, "Transaction Failed, Try again", Toast.LENGTH_SHORT).show();
+        payButton.setText("Try payment again");
+    }
+
+    @Override
+    public void onTransactionCancelled() {
+        Toast.makeText(this, "Transaction Cancelled, Try again", Toast.LENGTH_SHORT).show();
+        payButton.setText("Try payment again");
+    }
+
+    @Override
+    public void onAppNotFound() {
+        Toast.makeText(this, "App not found, Try again", Toast.LENGTH_SHORT).show();
+        payButton.setText("Try payment again");
     }
 
     private void addOrderToFireStore(Order order) {
