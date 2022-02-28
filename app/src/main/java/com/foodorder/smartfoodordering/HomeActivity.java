@@ -221,6 +221,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
         mOrder.put("email",email);
         mOrder.put("foodItems", foodItems);
         mOrder.put("totalPrice", order.getTotalPrice());
+        mOrder.put("Status","Active");
         mOrder.put("OrderPlacedTime", Calendar.getInstance().getTime());
         mOrder.put("estimatedTime", timeEst);
 
