@@ -1,5 +1,7 @@
 package com.foodorder.smartfoodordering;
 
+import static java.lang.Math.max;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +28,7 @@ import com.shreyaspatil.EasyUpiPayment.model.TransactionDetails;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,8 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
     private Order order;
     private Button payButton;
     private String TAG = "HomeActivity";
+    private int timeEst=0;
+    private TextView tvTotalPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,16 +60,15 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
         recyclerView = findViewById(R.id.recycler_view_food);
 
         List<Food> foodList = new ArrayList<>();
-        foodList.add(new Food("Dal Makhni", R.drawable.dal_makhni, "Dal Makhni Description", 10, 0));
-        foodList.add(new Food("Paneer", R.drawable.paneer, "Paneer Description", 210, 0));
-        foodList.add(new Food("Chole Bhature", R.drawable.chole_bhature, "2 pcs Bhature with Chole", 80, 0));
-        foodList.add(new Food("Idli", R.drawable.idli_sambhar, "2 pcs Idli with Sambhar", 70, 0));
-        foodList.add(new Food("Malai Kofta", R.drawable.malai_kofta, "Malai Kofta description", 190, 0));
-        foodList.add(new Food("Masala Dosa", R.drawable.masala_dosa, "Masala dosa with sambhar and chutney", 100, 0));
-        foodList.add(new Food("Mix Veg", R.drawable.mix_veg, "Mix Veg Description", 160, 0));
-        foodList.add(new Food("Pav Bhaji", R.drawable.pav_bhaji, "2 pcs Pav with bhaji", 150, 0));
-        foodList.add(new Food("Sambhar Vada", R.drawable.sambhar_vada, "2 pcs vada with sambhar and chutney", 80, 0));
-
+        foodList.add(new Food("Dal Makhni", R.drawable.dal_makhni, "Dal Makhni Description", 10, 0,"MainCourse"));
+        foodList.add(new Food("Paneer", R.drawable.paneer, "Paneer Description", 210, 0,"MainCourse"));
+        foodList.add(new Food("Chole Bhature", R.drawable.chole_bhature, "2 pcs Bhature with Chole", 80, 0,"MainCourse"));
+        foodList.add(new Food("Idli", R.drawable.idli_sambhar, "2 pcs Idli with Sambhar", 70, 0,"SouthIndian"));
+        foodList.add(new Food("Malai Kofta", R.drawable.malai_kofta, "Malai Kofta description", 190, 0,"MainCourse"));
+        foodList.add(new Food("Masala Dosa", R.drawable.masala_dosa, "Masala dosa with sambhar and chutney", 100, 0,"SouthIndian"));
+        foodList.add(new Food("Mix Veg", R.drawable.mix_veg, "Mix Veg Description", 160, 0,"MainCourse"));
+        foodList.add(new Food("Pav Bhaji", R.drawable.pav_bhaji, "2 pcs Pav with bhaji", 150, 0,"FastFood"));
+        foodList.add(new Food("Sambhar Vada", R.drawable.sambhar_vada, "2 pcs vada with sambhar and chutney", 80, 0,"SouthIndian"));
 
         foodListAdapter = new FoodListAdapter(foodList);
         recyclerView.setAdapter(foodListAdapter);
@@ -75,7 +79,6 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Srishti is pagal",order.getTotalPrice() + "checl");
                 makePayment(String.valueOf(order.getTotalPrice())+".00", "kriti03@axl","SmartFoodOrdering", order.getTotalPrice() +" "+email,email);
             }
         });
@@ -97,7 +100,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
                 findViewById(R.id.order_placed_title).setVisibility(View.VISIBLE);
                 findViewById(R.id.order_placed_quantity).setVisibility(View.VISIBLE);
                 findViewById(R.id.order_placed_price).setVisibility(View.VISIBLE);
-                TextView tvTotalPrice = findViewById(R.id.tv_total_price);
+                tvTotalPrice = findViewById(R.id.tv_total_price);
                 tvTotalPrice.setVisibility(View.VISIBLE);
 
                 final List<Food> foodList1 = foodListAdapter.getFoodList();
@@ -111,7 +114,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
                 order = new Order(orderFoodList);
                 Log.d("HomeActivity","yatin " + order);
                 order.setData();
-                tvTotalPrice.setText("Total Price = Rs" + order.getTotalPrice());
+//                tvTotalPrice.setText("Total Price = Rs" + order.getTotalPrice() + " ETA:" + timeEst + "mins");
 
                 String title = "";
                 for(int i=0;i<order.getItemTitle().size();i++){
@@ -128,7 +131,6 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
                     price += order.getItemPrice().get(i) + "\n";
                 }
                 orderPlacedItemPrice.setText(price);
-
 
                 addOrderToFireStore(order);
             }
@@ -201,20 +203,26 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
     private void addOrderToFireStore(Order order) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
         // Create a new user with a first and last name
         Map<String, Object> mOrder = new HashMap<>();
         List<Map<String,Object>> foodItems = new ArrayList<>();
+        List<String> catList = new ArrayList<>();
         for(int i=0;i<order.getFoodList().size();i++){
             Map<String,Object> food = new HashMap<>();
             food.put("Name",order.getFoodList().get(i).title);
             food.put("Quantity",order.getFoodList().get(i).quantity);
             food.put("Price",order.getFoodList().get(i).price);
+            food.put("Category",order.getFoodList().get(i).category);
+            catList.add(order.getFoodList().get(i).category);
             foodItems.add(food);
         }
+        timeEst = maxTime(catList);
+        tvTotalPrice.setText("Total Price = Rs" + order.getTotalPrice() + "\nEstimated Time of Arrival : " + timeEst + "mins");
         mOrder.put("email",email);
         mOrder.put("foodItems", foodItems);
         mOrder.put("totalPrice", order.getTotalPrice());
+        mOrder.put("OrderPlacedTime", Calendar.getInstance().getTime());
+        mOrder.put("estimatedTime", timeEst);
 
 // Add a new document with a generated ID
         db.collection("orders")
@@ -231,5 +239,20 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
+    }
+
+    int maxTime(List<String> catList){
+        int timeMax = 0;
+        for(String x:catList){
+            if(x.equals("MainCourse"))
+                timeMax = max(timeMax,30);
+            else if(x.equals("SouthIndian"))
+                timeMax = max(timeMax,20);
+            else if(x.equals("FastFood"))
+                timeMax = max(timeMax,10);
+            else
+                timeMax = max(timeMax,5);
+        }
+        return timeMax;
     }
 }
