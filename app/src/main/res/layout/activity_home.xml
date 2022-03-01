@@ -40,6 +40,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/bt_use_previous_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Use Previous Order"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view_food"
+        app:layout_constraintBottom_toTopOf="@id/button_submit"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_food"
         android:layout_width="match_parent"

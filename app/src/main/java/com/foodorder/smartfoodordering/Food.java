@@ -17,6 +17,11 @@ public class Food {
         this.category = category;
     }
 
+    public Food(String title, int quantity) {
+        this.title = title;
+        this.quantity = quantity;
+    }
+
     public String getTitle() {
         return title;
     }

@@ -19,6 +19,7 @@ import com.foodorder.smartfoodordering.adapter.FoodListAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.shreyaspatil.EasyUpiPayment.EasyUpiPayment;
 import com.shreyaspatil.EasyUpiPayment.listener.PaymentStatusListener;
@@ -41,9 +42,11 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
     private Button orderButton;
     private Order order;
     private Button payButton;
+    private Button btUsePreviousOrder;
     private String TAG = "HomeActivity";
     private int timeEst=0;
     private TextView tvTotalPrice;
+    private Order previousOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,8 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
         Intent intent = getIntent();
 
         email = intent.getStringExtra("email");
+
+        getPreviousOrder();
 
         Button buttonSubmit = findViewById(R.id.button_submit);
         buttonSubmit.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Order Placed", Toast.LENGTH_SHORT).show());
@@ -87,6 +92,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
             public void onClick(View view) {
                 orderButton.setVisibility(View.INVISIBLE);
                 payButton.setVisibility(View.VISIBLE);
+                btUsePreviousOrder.setVisibility(View.INVISIBLE);
                 orderButton.setText("Order Placed");
                 TextView menuItems = findViewById(R.id.tv_menu_items);
                 menuItems.setText("Order Placed");
@@ -133,6 +139,37 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
                 orderPlacedItemPrice.setText(price);
 
                 addOrderToFireStore(order);
+            }
+        });
+
+        btUsePreviousOrder = findViewById(R.id.bt_use_previous_order);
+        btUsePreviousOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(btUsePreviousOrder.getText().equals("Use Previous Order")) {
+                    for (int i = 0; i < previousOrder.getFoodList().size(); i++) {
+                        for (int j = 0; j < foodList.size(); j++) {
+                            if (previousOrder.getFoodList().get(i).title.equals(foodList.get(j).title)) {
+                                foodList.get(j).quantity = previousOrder.getFoodList().get(i).quantity;
+                            }
+                        }
+                    }
+                    btUsePreviousOrder.setText("Don't use previous order");
+                    foodListAdapter = new FoodListAdapter(foodList);
+                    recyclerView.setAdapter(foodListAdapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+                    Log.d(TAG,"check check 1");
+                }
+                else{
+                    for (int j = 0; j < foodList.size(); j++) {
+                        foodList.get(j).quantity = 0;
+                    }
+                    btUsePreviousOrder.setText("Use previous order");
+                    foodListAdapter = new FoodListAdapter(foodList);
+                    recyclerView.setAdapter(foodListAdapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+                    Log.d(TAG,"check check 2");
+                }
             }
         });
     }
@@ -225,13 +262,30 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
         mOrder.put("OrderPlacedTime", Calendar.getInstance().getTime());
         mOrder.put("estimatedTime", timeEst);
 
-// Add a new document with a generated ID
+        // Add a new document with a generated ID
         db.collection("orders")
                 .add(mOrder)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+
+        // Add a new document with a generated ID
+        db.collection("previous_order")
+                .document(email)
+                .set(mOrder)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + email);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -255,5 +309,32 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
                 timeMax = max(timeMax,5);
         }
         return timeMax;
+    }
+
+    void getPreviousOrder(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("previous_order").document(email).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Log.d(TAG,"success " + documentSnapshot.get("foodItems"));
+                        List<Map<String,Object>> foodItems = (List<Map<String, Object>>) documentSnapshot.get("foodItems");
+
+                        List<Food> foodList1 = new ArrayList<>();
+                        for(int i=0;i<foodItems.size();i++){
+                            Log.d(TAG,"yatin 1234" + foodItems.get(i));
+                            int tempVal = ((Long)foodItems.get(i).get("Quantity")).intValue();
+                            foodList1.add(new Food((String) foodItems.get(i).get("Name"),tempVal));
+                        }
+                        Log.d(TAG,"yatin 12345" + foodList1);
+                        previousOrder = new Order(foodList1);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG,"failure");
+                    }
+                });
     }
 }
