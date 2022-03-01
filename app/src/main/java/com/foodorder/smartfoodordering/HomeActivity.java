@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.foodorder.smartfoodordering.adapter.FoodListAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -85,6 +86,14 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
             @Override
             public void onClick(View view) {
                 makePayment(String.valueOf(order.getTotalPrice())+".00", "kriti03@axl","SmartFoodOrdering", order.getTotalPrice() +" "+email,email);
+            }
+        });
+        Button btLogout = findViewById(R.id.button_logout);
+        btLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
             }
         });
         orderButton.setOnClickListener(new View.OnClickListener() {
