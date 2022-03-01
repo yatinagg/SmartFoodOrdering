@@ -318,6 +318,10 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Log.d(TAG,"success " + documentSnapshot.get("foodItems"));
+                        if(documentSnapshot.get("foodItems") == null){
+                            btUsePreviousOrder.setVisibility(View.GONE);
+                            return;
+                        }
                         List<Map<String,Object>> foodItems = (List<Map<String, Object>>) documentSnapshot.get("foodItems");
 
                         List<Food> foodList1 = new ArrayList<>();
