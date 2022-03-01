@@ -173,7 +173,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
                     for (int j = 0; j < foodList.size(); j++) {
                         foodList.get(j).quantity = 0;
                     }
-                    btUsePreviousOrder.setText("Use previous order");
+                    btUsePreviousOrder.setText("Use Previous oOrder");
                     foodListAdapter = new FoodListAdapter(foodList);
                     recyclerView.setAdapter(foodListAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
