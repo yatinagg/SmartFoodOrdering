@@ -127,7 +127,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
             }
         });
 
-        payButton.setOnClickListener(view -> makePayment(order.getTotalPrice() +".00", "kriti03@axl","SmartFoodOrdering", order.getTotalPrice() +" "+email,email));
+        payButton.setOnClickListener(view -> makePayment(order.getTotalPrice() +".00", "9891439925@paytm","SmartFoodOrdering", order.getTotalPrice() +" "+email,email));
 
         btnLogout.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
@@ -317,7 +317,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
     }
 
     int maxTime(List<String> catList){
-        int timeMax = -10;
+        int timeMax = 0;
         for(String x:catList){
             switch (x) {
                 case "MainCourse":
@@ -334,7 +334,6 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
                     break;
             }
         }
-        Log.d("checkcheck12",timeMax + "ewhy");
         return timeMax;
     }
 
