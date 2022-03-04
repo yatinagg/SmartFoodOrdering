@@ -1,7 +1,5 @@
 package com.foodorder.smartfoodordering;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +9,7 @@ public class Order {
     private List<String> itemQuantity;
     private List<String> itemPrice;
     private int totalPrice;
+    private String paymentStatus;
 
     public Order(List<Food> foodList) {
         this.foodList = foodList;
@@ -18,10 +17,6 @@ public class Order {
 
     public List<Food> getFoodList() {
         return foodList;
-    }
-
-    public void setFoodList(List<Food> foodList) {
-        this.foodList = foodList;
     }
 
     public void setData(){
@@ -35,6 +30,7 @@ public class Order {
             itemQuantity.add(String.valueOf(foodList.get(i).quantity));
             totalPrice += foodList.get(i).price*foodList.get(i).quantity;
         }
+        paymentStatus = "Cash";
     }
 
     public int getTotalPrice() {
@@ -60,5 +56,13 @@ public class Order {
 
     public List<String> getItemPrice() {
         return itemPrice;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

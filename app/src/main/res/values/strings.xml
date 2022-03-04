@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SmartFoodOrdering</string>
     <string name="google_log_in">Google Log in</string>
+    <string name="try_payment_again">Try payment again</string>
 </resources>

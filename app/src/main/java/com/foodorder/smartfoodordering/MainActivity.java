@@ -41,9 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private SignInButton signInButton;
     private FirebaseUser firebaseUser;
 
-    // initializing variables for our edit text and button.
-//    private EditText amountEdt, upiEdt, nameEdt, descEdt;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             firebaseUser = mAuth.getCurrentUser();
                             gotoHomeActivity();
-//                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
