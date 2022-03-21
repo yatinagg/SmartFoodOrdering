@@ -129,15 +129,20 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
         });
 
         btnPaymentMode.setOnClickListener(view -> {
-            if(btnPaymentMode.getText() == "Cash")
+            if(btnPaymentMode.getText() == "Cash") {
                 btnPaymentMode.setText("Online");
-            else
+                payButton.setText("Pay and place order");
+            }
+            else {
                 btnPaymentMode.setText("Cash");
+                payButton.setText("Place Order in cash mode");
+            }
         });
 
         payButton.setOnClickListener(view -> {
             if(btnPaymentMode.getText() == "Cash"){
                 order.setPaymentMode("Cash");
+                order.setPaymentStatus("Incomplete");
                 orderPlaced();
             }
             else {
