@@ -21,7 +21,6 @@ import com.shreyaspatil.EasyUpiPayment.EasyUpiPayment;
 import com.shreyaspatil.EasyUpiPayment.listener.PaymentStatusListener;
 import com.shreyaspatil.EasyUpiPayment.model.TransactionDetails;
 
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -50,6 +49,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
     private TextView orderPlacedPrice;
     private TextView menuItems;
     private Button btnLogout;
+    private Button btnPaymentMode;
     private List<Food> foodList;
 
     @Override
@@ -98,6 +98,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
         btnUsePreviousOrder = findViewById(R.id.btn_use_previous_order);
         btnModifyCart = findViewById(R.id.btn_modify_cart);
         btnLogout = findViewById(R.id.btn_logout);
+        btnPaymentMode = findViewById(R.id.payment_mode);
     }
 
 
@@ -127,7 +128,23 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
             }
         });
 
-        payButton.setOnClickListener(view -> makePayment(order.getTotalPrice() +".00", "9891439925@paytm","SmartFoodOrdering", order.getTotalPrice() +" "+email,email));
+        btnPaymentMode.setOnClickListener(view -> {
+            if(btnPaymentMode.getText() == "Cash")
+                btnPaymentMode.setText("Online");
+            else
+                btnPaymentMode.setText("Cash");
+        });
+
+        payButton.setOnClickListener(view -> {
+            if(btnPaymentMode.getText() == "Cash"){
+                order.setPaymentMode("Cash");
+                orderPlaced();
+            }
+            else {
+                order.setPaymentMode("Online");
+                makePayment(order.getTotalPrice() + ".00", "9891439925@paytm", "SmartFoodOrdering", order.getTotalPrice() + " " + email, email);
+            }
+        });
 
         btnLogout.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
@@ -150,6 +167,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
             orderPlacedQuantity.setVisibility(View.VISIBLE);
             orderPlacedPrice.setVisibility(View.VISIBLE);
             tvTotalPrice.setVisibility(View.VISIBLE);
+            btnPaymentMode.setVisibility(View.VISIBLE);
 
             final List<Food> foodList1 = foodListAdapter.getFoodList();
             List<Food> orderFoodList = new ArrayList<>();
@@ -200,6 +218,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
             orderPlacedItemPrice.setVisibility(View.INVISIBLE);
             tvTotalPrice.setVisibility(View.INVISIBLE);
             payButton.setVisibility(View.INVISIBLE);
+            btnPaymentMode.setVisibility(View.INVISIBLE);
             btnViewCart.setVisibility(View.VISIBLE);
             btnViewCart.setText("View Cart");
             menuItems.setText("Menu");
@@ -244,6 +263,10 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
     public void onTransactionSuccess() {
         // this method is called when transaction is successful and we are displaying a toast message.
         Toast.makeText(this, "Transaction successfully completed..", Toast.LENGTH_SHORT).show();
+        orderPlaced();
+    }
+
+    private void orderPlaced() {
         Toast.makeText(this, "Order Placed..", Toast.LENGTH_SHORT).show();
         payButton.setVisibility(View.INVISIBLE);
         addOrderToFireStore(order);
@@ -298,6 +321,7 @@ public class HomeActivity extends AppCompatActivity implements PaymentStatusList
         mOrder.put("foodItems", foodItems);
         mOrder.put("totalPrice", order.getTotalPrice());
         mOrder.put("Status","Active");
+        mOrder.put("PaymentMode",order.getPaymentMode());
         mOrder.put("PaymentStatus",order.getPaymentStatus());
         mOrder.put("OrderPlacedTime", Calendar.getInstance().getTime());
         mOrder.put("estimatedTime", timeEst);

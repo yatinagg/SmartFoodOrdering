@@ -9,6 +9,7 @@ public class Order {
     private List<String> itemQuantity;
     private List<String> itemPrice;
     private int totalPrice;
+    private String paymentMode;
     private String paymentStatus;
 
     public Order(List<Food> foodList) {
@@ -64,5 +65,13 @@ public class Order {
 
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
     }
 }
